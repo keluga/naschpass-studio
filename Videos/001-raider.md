@@ -1,13 +1,19 @@
 ---
-status: entwurf
+status: fertig
 vorlage: nostalgie
 stimme: Leda
-stil: "warm und begeistert, wie ein Freund, der eine Kindheitserinnerung erzählt; kleine Pausen, am Ende neugierig fragend"
+stil: warm und begeistert, wie ein Freund, der eine Kindheitserinnerung erzählt; kleine Pausen, am Ende neugierig fragend
 fakten:
   - "[[twix-hiess-raider-bis-1991]]"
   - "[[raider-im-norden-bis-2000]]"
-caption: "1991 war Schluss mit Raider. Im Norden hat der Name noch bis 2000 durchgehalten 🍫 Sagst du heute noch Raider? 👇"
-hashtags: [naschpass, nostalgie, raider, twix, süßigkeiten, 90er]
+caption: 1991 war Schluss mit Raider. Im Norden hat der Name noch bis 2000 durchgehalten 🍫 Sagst du heute noch Raider? 👇
+hashtags:
+  - naschpass
+  - nostalgie
+  - raider
+  - twix
+  - süßigkeiten
+  - 90er
 video: ""
 gerendert_am: ""
 gepostet_am: ""
