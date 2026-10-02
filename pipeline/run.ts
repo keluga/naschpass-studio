@@ -6,7 +6,7 @@ import { bundle } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
 import { beatStarts, timeWords } from "./align";
 import { fetchImages } from "./images";
-import { loadFacts, loadStories, ROOT } from "./load";
+import { ghError, loadFacts, loadStories, ROOT } from "./load";
 import { RenderProps, Story, Fact } from "./schema";
 import { synthesize } from "./tts";
 import { checkStory } from "./validate";
@@ -85,6 +85,7 @@ const main = async () => {
 };
 
 main().catch((e) => {
+  ghError("Video-Pipeline", (e as Error).message);
   console.error(`\n✗ ${(e as Error).message}`);
   process.exit(1);
 });

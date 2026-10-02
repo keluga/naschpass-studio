@@ -96,3 +96,11 @@ export const loadStories = () => loadDir<Story>(STORIES_DIR, storyFromNote, Stor
 // Gesprochener Text ohne Regie-Tags wie <short pause>
 export const spoken = (s: string) => s.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 export const wordCount = (s: string) => spoken(s).split(" ").filter(Boolean).length;
+
+// Fehler zusätzlich als GitHub-Annotation ausgeben (lesbar über die API, ohne Log-Download)
+export const ghError = (title: string, msg: string) => {
+  if (process.env.GITHUB_ACTIONS) {
+    const esc = (s: string) => s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+    console.log(`::error title=${esc(title).replace(/[:,]/g, " ")}::${esc(msg)}`);
+  }
+};

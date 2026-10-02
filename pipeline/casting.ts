@@ -6,6 +6,7 @@ import path from "node:path";
 import { ROOT } from "./load";
 import type { Story } from "./schema";
 import { synthesize } from "./tts";
+import { ghError } from "./load";
 
 const VOICES = ["Puck", "Kore", "Charon", "Aoede", "Fenrir", "Leda", "Orus", "Zephyr"];
 const TEXT = "Zurück ins Jahr 1991. Damals verschwand ein Name, den du vielleicht noch kennst: Raider. Sagst du heute noch Raider? Schreib's in die Kommentare.";
@@ -43,6 +44,7 @@ for (const [i, voice] of VOICES.entries()) {
   } catch (e) {
     const reason = ((e as Error).message || String(e)).split("\n")[0].slice(0, 300);
     console.error(`  Fehler bei ${voice}: ${reason}`);
+    ghError(`Casting ${voice}`, reason);
     failed.push({ voice, reason });
   }
 }
