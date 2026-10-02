@@ -17,7 +17,7 @@ Du schreibst Skripte für kurze, emotionale Süßigkeiten-Videos (15–25 Sekund
    - `zitat`: wörtlich von der geöffneten Seite kopiert (WebFetch mit dem Auftrag „quote verbatim“). Nie umformulieren.
    - `aussage`: deutscher Satz, der **nicht mehr** behauptet als das Zitat. Keine Zusatzdetails, keine Wertungen.
    - Findest du keinen wörtlichen Beleg: Aussage weglassen.
-4. **Video-Notiz** `Videos/<nnn>-<stichwort>.md`, Aufbau exakt wie im Vorbild. `stimme: Puck`, `status: entwurf`, Felder `video`, `gerendert_am`, `gepostet_am` leer (`""`).
+4. **Video-Notiz** `Videos/<nnn>-<stichwort>.md`, Aufbau exakt wie im Vorbild. `stimme: Leda`, `status: entwurf`, Felder `video`, `gerendert_am`, `gepostet_am` leer (`""`).
 
 ## So wird ein Skript gut
 - **Ein Gefühl pro Video**, passend zur Vorlage: nostalgie = Erinnerung („Kennst du noch …?“), verboten = Ungläubigkeit („Das ist dort verboten.“), staunen = Wow („Das gibt es nur in …“), duell = Lager bilden („Team A oder Team B?“).

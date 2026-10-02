@@ -55,7 +55,7 @@ notiz: ""
 | `question` | `word` (≤14), `options` [2 × ≤10] | Schluss mit Kommentar-Frage |
 
 **Vorlagen (`vorlage`):** `nostalgie` (VHS-Look), `verboten` (dunkelrot, Stempel), `staunen` (türkis), `duell` (grün, VS).
-**Stimme (`stimme`):** fest `Puck`, bis Kev nach dem Stimmen-Casting eine andere wählt.
+**Stimme (`stimme`):** fest `Leda` (Kevs Wahl aus dem Casting, Alternative `Charon`). Nie Puck.
 
 ## Befehle
 - `npm run check`: prüft alle Notizen. `npm run check -- --ready <id>`: prüft, ob ein Video baubar ist.

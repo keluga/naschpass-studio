@@ -1,7 +1,7 @@
 ---
 status: entwurf
 vorlage: nostalgie
-stimme: Puck
+stimme: Leda
 stil: "warm und begeistert, wie ein Freund, der eine Kindheitserinnerung erzählt; kleine Pausen, am Ende neugierig fragend"
 fakten:
   - "[[twix-hiess-raider-bis-1991]]"
