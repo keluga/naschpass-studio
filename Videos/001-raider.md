@@ -1,5 +1,5 @@
 ---
-status: fertig
+status: "gerendert"
 vorlage: nostalgie
 stimme: Leda
 stil: warm und begeistert, wie ein Freund, der eine Kindheitserinnerung erzählt; kleine Pausen, am Ende neugierig fragend
@@ -14,8 +14,8 @@ hashtags:
   - twix
   - süßigkeiten
   - 90er
-video: ""
-gerendert_am: ""
+video: "https://github.com/keluga/naschpass-studio/releases/tag/video-001-raider"
+gerendert_am: "2026-10-02"
 gepostet_am: ""
 ---
 # Raider: der Name, der 1991 verschwand
