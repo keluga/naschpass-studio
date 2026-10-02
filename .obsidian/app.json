@@ -1,0 +1,6 @@
+{
+  "userIgnoreFilters": ["node_modules/", "src/", "pipeline/", "public/", "out/", ".cache/", ".github/", ".claude/"],
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Videos",
+  "alwaysUpdateLinks": true
+}

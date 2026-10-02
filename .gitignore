@@ -1,0 +1,12 @@
+node_modules
+dist
+out
+build
+.cache
+public/build
+whisper.cpp
+.env
+.DS_Store
+.obsidian/workspace*.json
+.obsidian/cache
+.trash/

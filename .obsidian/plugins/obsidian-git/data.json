@@ -1,0 +1,10 @@
+{
+  "commitMessage": "Obsidian: {{date}}",
+  "autoSaveInterval": 5,
+  "autoPullInterval": 5,
+  "autoPullOnBoot": true,
+  "pullBeforePush": true,
+  "syncMethod": "merge",
+  "disablePopupsForNoChanges": true,
+  "showStatusBar": true
+}

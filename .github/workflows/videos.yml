@@ -1,0 +1,109 @@
+name: Videos bauen
+
+on:
+  push:
+    branches: [main]
+    paths: ["Videos/**", "Fakten/**"]
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: "Video-IDs mit Leerzeichen getrennt, leer = geänderte"
+        type: string
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: videos
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: ffmpeg installieren
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - run: npm ci
+
+      - name: Zu bauende Videos bestimmen
+        id: pick
+        env:
+          INPUT_IDS: ${{ inputs.ids }}
+        run: npx tsx pipeline/changed.ts "${{ github.event.before || 'HEAD~1' }}" $INPUT_IDS >> "$GITHUB_OUTPUT"
+
+      - name: Ausgewählte Videos prüfen
+        if: steps.pick.outputs.ids != ''
+        run: npm run check -- --ready ${{ steps.pick.outputs.ids }}
+
+      - name: Whisper-Zwischenspeicher
+        if: steps.pick.outputs.ids != ''
+        uses: actions/cache@v4
+        with:
+          path: .cache/whisper.cpp
+          key: whisper-1.5.5-small-v1
+
+      - name: Stimmen-Zwischenspeicher
+        if: steps.pick.outputs.ids != ''
+        uses: actions/cache@v4
+        with:
+          path: .cache/tts
+          key: tts-${{ github.run_id }}
+          restore-keys: tts-
+
+      - name: Browser für Remotion bereitstellen
+        if: steps.pick.outputs.ids != ''
+        run: npx remotion browser ensure
+
+      - name: Videos bauen
+        if: steps.pick.outputs.ids != ''
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          RENDER_CONCURRENCY: 3
+        run: npm run produce -- ${{ steps.pick.outputs.ids }}
+
+      - name: Release anlegen und Notizen zurückschreiben
+        if: steps.pick.outputs.ids != ''
+        env:
+          IDS: ${{ steps.pick.outputs.ids }}
+        run: |
+          for id in $IDS; do
+            gh release delete "video-$id" --yes --cleanup-tag || true
+            gh release create "video-$id" "out/$id/$id.mp4" "out/$id/caption.txt" "out/$id/vorschau.jpg" \
+              --title "$id" --notes-file "out/$id/caption.txt" --target "$GITHUB_SHA"
+            npx tsx pipeline/writeback.ts "$id" "https://github.com/$GITHUB_REPOSITORY/releases/tag/video-$id"
+          done
+
+      - name: Rückschreiben committen
+        if: steps.pick.outputs.ids != ''
+        env:
+          IDS: ${{ steps.pick.outputs.ids }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Videos
+          git commit -m "Videos gebaut: $IDS [skip ci]" || exit 0
+          git pull --rebase
+          git push
+
+      - name: Ausgabe hochladen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ausgabe
+          path: out/
+          retention-days: 14
+          if-no-files-found: ignore

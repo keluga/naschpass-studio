@@ -1,0 +1,45 @@
+name: Stimmen-Casting
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  casting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: ffmpeg installieren
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - run: npm ci
+
+      - name: Hörproben erzeugen
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npx tsx pipeline/casting.ts
+
+      - name: Release mit den Hörproben anlegen
+        run: |
+          gh release delete stimmen-casting --yes --cleanup-tag || true
+          gh release create stimmen-casting out/casting/*.mp3 --prerelease --title "Stimmen-Casting" --notes "Hör dir die Stimmen an und sag Claude, welche dir am besten gefällt."
+
+      - name: Ausgabe hochladen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ausgabe
+          path: out/
+          retention-days: 14
+          if-no-files-found: ignore
