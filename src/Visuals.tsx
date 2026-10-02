@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import type { ImageAsset, Show } from "../pipeline/schema";
-import { AREA, BODY, HEAD, Palette } from "./theme";
+import { AREA, BODY, fitSize, HEAD, Palette } from "./theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -97,8 +97,8 @@ const YearRoll: React.FC<P & { show: Extract<Show, { type: "yearRoll" }> }> = ({
   const pop = interpolate(f, [40, 46, 54], [1, 1.1, 1], clamp);
   return (
     <Area>
-      {show.label ? <div style={{ ...fadeUp(f, 0), fontFamily: HEAD, fontSize: 110, color: pal.text, textTransform: "uppercase", lineHeight: 1.05 }}>{show.label}</div> : null}
-      <div style={{ fontFamily: HEAD, fontSize: 420, lineHeight: 1, color: pal.accent2, transform: `scale(${pop})`, transformOrigin: "left center" }}>{year}</div>
+      {show.label ? <div style={{ ...fadeUp(f, 0), fontFamily: HEAD, fontSize: fitSize(show.label, 110), color: pal.text, textTransform: "uppercase", lineHeight: 1.05 }}>{show.label}</div> : null}
+      <div style={{ fontFamily: HEAD, fontSize: fitSize(String(show.to), 420), lineHeight: 1, color: pal.accent2, transform: `scale(${pop})`, transformOrigin: "left center" }}>{year}</div>
     </Area>
   );
 };
@@ -109,7 +109,7 @@ const BigWord: React.FC<P & { show: Extract<Show, { type: "bigWord" }> }> = ({ s
   const shake = f < 12 ? Math.sin(f * 2.4) * (12 - f) : 0;
   return (
     <Area>
-      <div style={{ fontFamily: HEAD, fontSize: 300, lineHeight: 0.95, color: pal.accent, textTransform: "uppercase", transform: `scale(${interpolate(s, [0, 1], [2.3, 1])}) translateX(${shake}px)`, transformOrigin: "left center" }}>
+      <div style={{ fontFamily: HEAD, fontSize: fitSize(show.word, 300), lineHeight: 0.95, color: pal.accent, textTransform: "uppercase", transform: `scale(${interpolate(s, [0, 1], [2.3, 1])}) translateX(${shake}px)`, transformOrigin: "left center" }}>
         {show.word}
       </div>
       {show.bar ? <Bar delay={8} /> : null}
@@ -122,10 +122,10 @@ const Swap: React.FC<P & { show: Extract<Show, { type: "swap" }> }> = ({ show, p
   const strike = interpolate(f, [10, 22], [0, 100], clamp);
   const drop = interpolate(f, [26, 42], [0, 1], { ...clamp, easing: Easing.in(Easing.quad) });
   const s = usePop(36, 10);
-  const word: React.CSSProperties = { position: "absolute", fontFamily: HEAD, fontSize: 290, lineHeight: 1, textTransform: "uppercase" };
+  const word: React.CSSProperties = { position: "absolute", fontFamily: HEAD, fontSize: Math.min(fitSize(show.oldWord, 290), fitSize(show.newWord, 290)), lineHeight: 1, textTransform: "uppercase", whiteSpace: "nowrap" };
   return (
     <Area>
-      {show.label ? <div style={{ ...fadeUp(f, 0), fontFamily: HEAD, fontSize: 150, color: pal.accent2 }}>{show.label}</div> : null}
+      {show.label ? <div style={{ ...fadeUp(f, 0), fontFamily: HEAD, fontSize: fitSize(show.label, 150), color: pal.accent2 }}>{show.label}</div> : null}
       <div style={{ position: "relative", height: 320, width: "100%" }}>
         <div style={{ ...word, color: pal.text, opacity: 1 - drop, transform: `translateY(${drop * 420}px) rotate(${drop * 16}deg)` }}>
           {show.oldWord}
@@ -140,12 +140,14 @@ const Swap: React.FC<P & { show: Extract<Show, { type: "swap" }> }> = ({ show, p
 const Statement: React.FC<P & { show: Extract<Show, { type: "statement" }> }> = ({ show, pal }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
+  // alle Zeilen gleich groß, passend zur längsten
+  const size = Math.min(...show.lines.map((l) => fitSize(l, 185)));
   return (
     <Area>
       {show.lines.map((line, i) => {
         const s = spring({ frame: f - i * 14, fps, config: { damping: 12 } });
         return (
-          <div key={line} style={{ fontFamily: HEAD, fontSize: 185, lineHeight: 1, textTransform: "uppercase", color: i === show.accent ? pal.accent : pal.text, opacity: interpolate(s, [0, 0.3], [0, 1], clamp), transform: `translateY(${interpolate(s, [0, 1], [120, 0])}px)` }}>
+          <div key={line} style={{ fontFamily: HEAD, fontSize: size, lineHeight: 1, whiteSpace: "nowrap", textTransform: "uppercase", color: i === show.accent ? pal.accent : pal.text, opacity: interpolate(s, [0, 0.3], [0, 1], clamp), transform: `translateY(${interpolate(s, [0, 1], [120, 0])}px)` }}>
             {line}
           </div>
         );
@@ -222,7 +224,7 @@ const Question: React.FC<P & { show: Extract<Show, { type: "question" }> }> = ({
   );
   return (
     <Area>
-      <div style={{ fontFamily: HEAD, fontSize: 270, lineHeight: 1, color: pal.accent, textTransform: "uppercase", transform: `scale(${interpolate(s, [0, 1], [0.4, 1])})`, transformOrigin: "left center" }}>{show.word}</div>
+      <div style={{ fontFamily: HEAD, fontSize: fitSize(show.word, 270), lineHeight: 1, color: pal.accent, textTransform: "uppercase", transform: `scale(${interpolate(s, [0, 1], [0.4, 1])})`, transformOrigin: "left center" }}>{show.word}</div>
       <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
         {pill(show.options[0], pal.accent2, 12)}
         <div style={{ ...fadeUp(f, 16), fontFamily: BODY, fontWeight: 800, fontSize: 48, color: pal.text }}>oder</div>
